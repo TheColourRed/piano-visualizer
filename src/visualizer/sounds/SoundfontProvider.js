@@ -64,6 +64,7 @@ class SoundfontProvider extends React.Component {
           [midiNumber]: audioNode
         })
       });
+      this.props.addActiveNote(midiNumber);
     });
   };
 
@@ -79,6 +80,7 @@ class SoundfontProvider extends React.Component {
           [midiNumber]: null
         })
       });
+      this.props.removeActiveNote(midiNumber);
     });
   };
 

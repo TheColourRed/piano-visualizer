@@ -19,14 +19,7 @@ const keyboardShortcuts = KeyboardShortcuts.create({
   keyboardConfig: KeyboardShortcuts.QWERTY_ROW
 });
 
-class Keyboad extends React.Component {
-
-  onPlayNoteInput = midiNumber => {
-    this.props.setActiveNotes({
-      activeNotes: this.props.activeNotes.concat(midiNumber)
-    });
-  };
-
+class Keyboard extends React.Component {
   render() {
     return (
       <div className="keyboard--felt h-100">
@@ -34,12 +27,13 @@ class Keyboad extends React.Component {
           instrumentName="acoustic_grand_piano"
           audioContext={audioContext}
           hostname={soundfontHostname}
+          addActiveNote={this.props.addActiveNote}
+          removeActiveNote={this.props.removeActiveNote}
           render={({ isLoading, playNote, stopNote }) => (
             <Piano
               noteRange={noteRange}
               playNote={playNote}
               stopNote={stopNote}
-              onPlayNoteInput={this.onPlayNoteInput}
               disabled={isLoading}
               keyboardShortcuts={keyboardShortcuts}
             />
@@ -50,4 +44,4 @@ class Keyboad extends React.Component {
   }
 }
 
-export default Keyboad;
+export default Keyboard;

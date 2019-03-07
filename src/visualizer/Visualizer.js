@@ -7,14 +7,28 @@ import ContainerDimensions from 'react-container-dimensions'
 class Visualizer extends React.Component {
   
   state = {
-    activeNotes: [10]
+    activeNotes: []
   };
 
-  setActiveNotes = value => {
-    this.setState({
-      activeNotes: Object.assign({}, this.state.activeNotes, value),
-    });
-  };
+  addActiveNote = noteNumber => {
+    if(this.state.activeNotes.includes(noteNumber)) {
+      return;
+    } else {
+      this.setState({
+        activeNotes: this.state.activeNotes.concat(noteNumber)
+      });
+    }
+  }
+
+  removeActiveNote = noteNumber => {
+    if(this.state.activeNotes.includes(noteNumber)) {
+      this.setState({
+        activeNotes: this.state.activeNotes.filter(note => note !== noteNumber)
+      });
+    } else {
+      return;
+    }
+  }
 
   render() {
     return (
@@ -22,7 +36,11 @@ class Visualizer extends React.Component {
         <div className="canvas-border-wrap"><div className="canvas">
           <ContainerDimensions>
             { ({ width, height }) => 
-              <Canvas width={width} height={height} activeNotes={this.state.activeNotes} />
+              <Canvas 
+                width={width} 
+                height={height} 
+                activeNotes={this.state.activeNotes}
+              />
             }
           </ContainerDimensions>
           </div></div>
@@ -35,8 +53,8 @@ class Visualizer extends React.Component {
         </div>
         <div className="keyboard">
           <Keyboard 
-            activeNotes={this.state.activeNotes}
-            setActiveNotes={this.setActiveNotes}
+            addActiveNote={this.addActiveNote}
+            removeActiveNote={this.removeActiveNote}
           />
         </div>
       </div>
