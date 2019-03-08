@@ -10,23 +10,21 @@ class Visualizer extends React.Component {
     activeNotes: []
   };
 
-  addActiveNote = noteNumber => {
-    if(this.state.activeNotes.includes(noteNumber)) {
+  addActiveNote = midiNumber => {
+    if(this.state.activeNotes.includes(midiNumber)) {
       return;
     } else {
       this.setState({
-        activeNotes: this.state.activeNotes.concat(noteNumber)
+        activeNotes: this.state.activeNotes.concat(midiNumber)
       });
     }
   }
 
-  removeActiveNote = noteNumber => {
-    if(this.state.activeNotes.includes(noteNumber)) {
-      this.setState({
-        activeNotes: this.state.activeNotes.filter(note => note !== noteNumber)
-      });
-    } else {
-      return;
+  removeActiveNote = midiNumber => {
+    if(this.state.activeNotes.includes(midiNumber)) {
+      let arr = [...this.state.activeNotes];
+      arr.splice(arr.indexOf(midiNumber),1);
+      this.setState({activeNotes: arr});
     }
   }
 
