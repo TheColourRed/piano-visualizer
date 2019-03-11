@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano";
 import SoundfontProvider from "./sounds/SoundfontProvider";
+import classNames from 'classnames';
 import "react-piano/dist/styles.css";
 
 // webkitAudioContext fallback needed to support Safari
@@ -20,25 +22,44 @@ const keyboardShortcuts = KeyboardShortcuts.create({
 });
 
 class Keyboard extends React.Component {
+
+  static propTypes = {
+    onPlayNote: PropTypes.func,
+    onStopNote: PropTypes.func,
+    sustain: PropTypes.bool.isRequired,
+    onSustain: PropTypes.func
+  }
+
   render() {
     return (
-      <div className="keyboard--felt h-100">
-        <SoundfontProvider
-          instrumentName="acoustic_grand_piano"
-          audioContext={audioContext}
-          hostname={soundfontHostname}
-          addActiveNote={this.props.addActiveNote}
-          removeActiveNote={this.props.removeActiveNote}
-          render={({ isLoading, playNote, stopNote }) => (
-            <Piano
-              noteRange={noteRange}
-              playNote={playNote}
-              stopNote={stopNote}
-              disabled={isLoading}
-              keyboardShortcuts={keyboardShortcuts}
-            />
-          )}
-        />
+      <div className="h-100">
+        <div className="keyboard_keys">
+          <div className="keyboard--felt"/>
+          <SoundfontProvider
+            instrumentName="acoustic_grand_piano"
+            audioContext={audioContext}
+            hostname={soundfontHostname}
+            onPlayNote={this.props.onPlayNote}
+            onStopNote={this.props.onStopNote}
+            sustain={this.props.sustain}
+            render={({ isLoading, playNote, stopNote }) => (
+              <Piano
+                noteRange={noteRange}
+                playNote={playNote}
+                stopNote={stopNote}
+                disabled={isLoading}
+                keyboardShortcuts={keyboardShortcuts}
+              />
+            )}
+          />
+        </div>
+        <div className="keyboard_footer vertical-align">
+          <div className={classNames('keyboard_footer--sustain', {
+              'keyboard_footer--active' : this.props.sustain
+            })}
+            onMouseDown={this.props.onSustain}
+          />
+        </div>
       </div>
     );
   }

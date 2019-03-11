@@ -5,11 +5,13 @@ import Soundfont from "soundfont-player";
 class SoundfontProvider extends React.Component {
   static propTypes = {
     instrumentName: PropTypes.string.isRequired,
+    sustain: PropTypes.bool.isRequired,
+    onPlayNote: PropTypes.func,
+    onStopNote: PropTypes.func,
     hostname: PropTypes.string.isRequired,
     format: PropTypes.oneOf(["mp3", "ogg"]),
     soundfont: PropTypes.oneOf(["MusyngKite", "FluidR3_GM"]),
     audioContext: PropTypes.instanceOf(window.AudioContext)
-    // render: PropTypes.func,
   };
 
   static defaultProps = {
@@ -64,13 +66,19 @@ class SoundfontProvider extends React.Component {
           [midiNumber]: audioNode
         })
       });
-      this.props.addActiveNote(midiNumber);
+      this.props.onPlayNote(midiNumber);
     });
   };
 
   stopNote = midiNumber => {
     this.props.audioContext.resume().then(() => {
-      if (!this.state.activeAudioNodes[midiNumber]) {
+      // This sets held notes only and sustain should not be acknowledged
+      this.props.onStopNote(midiNumber); 
+      if (this.props.sustain) {
+        const audioNode = this.state.activeAudioNodes[midiNumber];
+        if (audioNode) {
+          audioNode.stop();
+        }
         return;
       }
       const audioNode = this.state.activeAudioNodes[midiNumber];
@@ -80,7 +88,6 @@ class SoundfontProvider extends React.Component {
           [midiNumber]: null
         })
       });
-      this.props.removeActiveNote(midiNumber);
     });
   };
 

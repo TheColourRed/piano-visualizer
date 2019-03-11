@@ -14,6 +14,18 @@ img {
 	width:auto;
 }
 
+label {
+  color: lightgrey;
+  margin: auto;
+  font-size: 0.875em;
+  font-family: Arial;
+}
+
+.vertical-align {
+  display: flex;
+  align-items: center;
+}
+
 .canvas-border-wrap {
   height: 70%;
   padding: 1rem;
@@ -29,8 +41,38 @@ img {
 
 .keyboard {
   height: 20%;
-  padding: 2rem;
   background-image: linear-gradient(#333333, #444444);
+}
+
+.keyboard_keys {
+  height: 75%;
+  padding-top: 1.625em;
+  padding-left: 1.625em;
+  padding-right: 1.625em;
+  padding-bottom: 0.5em;
+}
+
+.keyboard_footer {
+  height: 25%;
+}
+
+.keyboard_footer--sustain {
+  width: 15%;
+  height: 50%;
+  position: relative;
+  margin: auto;
+  background-color: #ccc;
+  border-radius: 4px;
+  box-shadow:0 0.4em 0.1em #aaa;
+}
+
+.keyboard_footer--active {
+  background: #ed5276;
+}
+
+.keyboard_footer--active.keyboard_footer--sustain {
+  top: 0.2em;
+  box-shadow:0 0.2em 0.1em #aaa;
 }
 
 .keyboard--felt {
@@ -60,6 +102,7 @@ img {
 
 .dashboard {
   height: 10%;
+  text-align: center;
   background-image: linear-gradient(#222222, #444444);
   border-bottom: #3a3a3a solid 0.5vh;
   border-top: #3a3a3a solid 0.5vh;
@@ -69,21 +112,27 @@ img {
   height: 100vh;
 }
 
+.ReactPiano__Key--accidental {
+  box-shadow: 0 0.25em 0.125em #888;
+  border: none;
+}
+
+.ReactPiano__Key--natural {
+  box-shadow: inset 0 0.25em 0.0625em #822, 0 0.5em 0.125em #aaa;
+  background: #ccc;
+  border: none;
+}
+
 .ReactPiano__Key--active.ReactPiano__Key--accidental {
   background: #ed5276;
-  border: 0.2em solid #444444;
+  box-shadow: 0 0.125em 0.125em #888;
+  border: 0.1em solid #444444;
+  border-top: none;
 }
 
 .ReactPiano__Key--active.ReactPiano__Key--natural {
   background: #ed5276;
-  border: 0.1em solid #444444;
+  box-shadow: inset 0 0.25em 0.0625em #822, 0 0.25em 0.125em #888;
+  border: none;
+  border-top: none;
 }
-
-.linechart_path {
-  stroke-width: 2;
-  fill: none;
-}
-
-/* div {
-  border: 1px solid;
-} */

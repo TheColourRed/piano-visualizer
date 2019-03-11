@@ -6,27 +6,40 @@ import ContainerDimensions from 'react-container-dimensions'
 
 class Visualizer extends React.Component {
   
-  state = {
-    activeNotes: []
-  };
+  constructor(props) {
+    super(props);
 
-  addActiveNote = midiNumber => {
-    if(this.state.activeNotes.includes(midiNumber)) {
+    this.state = {
+      pressedNotes: [],
+      sustain: false,
+      exposure: 20,
+      phaseChange: 1
+    };
+  }
+
+  pressNote = midiNumber => {
+    if(this.state.pressedNotes.includes(midiNumber)) {
       return;
     } else {
       this.setState({
-        activeNotes: this.state.activeNotes.concat(midiNumber)
+        pressedNotes: this.state.pressedNotes.concat(midiNumber)
       });
     }
   }
 
-  removeActiveNote = midiNumber => {
-    if(this.state.activeNotes.includes(midiNumber)) {
-      let arr = [...this.state.activeNotes];
+  letGoNote = midiNumber => {
+    if(this.state.pressedNotes.includes(midiNumber)) {
+      let arr = [...this.state.pressedNotes];
       arr.splice(arr.indexOf(midiNumber),1);
-      this.setState({activeNotes: arr});
+      this.setState({pressedNotes: arr});
     }
   }
+
+  toggleSustain = () => this.setState({sustain: !this.state.sustain});
+
+  setExposure = value => this.setState({exposure: value});
+
+  setPhaseChange = value =>  this.setState({phaseChange: value});
 
   render() {
     return (
@@ -37,22 +50,28 @@ class Visualizer extends React.Component {
               <Canvas 
                 width={width} 
                 height={height} 
-                activeNotes={this.state.activeNotes}
+                pressedNotes={this.state.pressedNotes}
+                sustain={this.state.sustain}
+                exposure={this.state.exposure}
+                phaseChange={this.state.phaseChange}
               />
             }
           </ContainerDimensions>
           </div></div>
         <div className="dashboard">
-          <div className="mt-4">
-            <strong>Recorded notes</strong>
-            <div>{JSON.stringify(this.state.activeNotes)}</div>
-          </div>
-          <Dashboard />
+          <Dashboard 
+            exposure={this.state.exposure}
+            setExposure={this.setExposure}
+            phaseChange={this.state.phaseChange}
+            setPhaseChange={this.setPhaseChange}
+          />
         </div>
         <div className="keyboard">
           <Keyboard 
-            addActiveNote={this.addActiveNote}
-            removeActiveNote={this.removeActiveNote}
+            onPlayNote={this.pressNote}
+            onStopNote={this.letGoNote}
+            sustain={this.state.sustain}
+            onSustain={this.toggleSustain}
           />
         </div>
       </div>

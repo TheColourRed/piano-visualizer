@@ -1,24 +1,25 @@
 import React from "react";
 
-const lineWidth = 2;
+const lineWidth = 4;
 const tuneF = 440; 
 const xScale = 0.0001;
-const yScale = 500;
-const decayActive = 0.98;
+const yScale = 0.95;
+const exposureScale = 1.06;
+const decayActive = 0.97;
 const decayInActive = 0.75;
-const intervalTime = 20;
-const intervalIncrement = 0.25;
+const intervalTime = 10;
 
 class Canvas extends React.Component {
 
   constructor(props) {
     super(props)
-    this.amplitudes = new Map([]);
-    this.amplitudeTotal = 0; 
-  }
 
-  state = {
-    timeOffset: 0
+    this.state = {
+      timeOffset: 0
+    }
+
+    this.amplitudes = new Map([]);
+    this.amplitudeTotal = 0;
   }
 
   componentDidMount() {
@@ -26,28 +27,37 @@ class Canvas extends React.Component {
     this.updateCanvas();
   }
   
-  componentDidUpdate() {
-    for(var note of this.props.activeNotes) {
-      if(!this.amplitudes.has(note)) {
+  componentDidUpdate(prevProps) {
+    for(var note of this.props.pressedNotes) {
+      if(!prevProps.pressedNotes.includes(note)) {
         this.amplitudes.set(note, 1);
+        for (let [midi, amp] of this.amplitudes) {
+          if(amp < 0.25) {
+            this.amplitudes.delete(midi);
+          }
+        }
       }
     }
-    this.updateCanvas();
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-
+  
   updateOnInterval = () => {
-    this.setState({timeOffset: this.state.timeOffset + intervalIncrement});
+    this.setState({timeOffset: this.state.timeOffset + 2 * Math.PI * this.props.phaseChange / 100});
+    this.updateAmplitudeDecay();
+    this.updateCanvas();
+  }
+
+  updateAmplitudeDecay = () => {
     for (let [midi, amp] of this.amplitudes) {
-      if(this.props.activeNotes.includes(midi) && amp > 0) {
-        this.amplitudes.set(midi, amp * decayActive);
-      } else if(amp > 0.01) {
-        this.amplitudes.set(midi, amp * decayInActive);
-      } else {
+      if(amp < 0.002) {
         this.amplitudes.delete(midi);
+      } else if (this.props.sustain || this.props.pressedNotes.includes(midi)) {
+        this.amplitudes.set(midi, amp * decayActive);
+      } else {
+        this.amplitudes.set(midi, amp * decayInActive);
       }
     }
   }
@@ -59,41 +69,51 @@ class Canvas extends React.Component {
     let yOffset = h/2;
     let xOffset = w/2;
     
-    ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = lineWidth;
-    var gradient=ctx.createLinearGradient(100,0,w-100,0);
+
+    ctx.strokeStyle = this.buildGradient(ctx.createLinearGradient(0,0,w,0));
+
+    ctx.fillStyle = `rgba(0,0,0,${Math.pow(exposureScale, -this.props.exposure)})`;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, yOffset);
+    for (var x = -5; x < w+5; x+=3) {
+      let y = yOffset;
+      for(let [midi] of this.amplitudes) {
+        let frequency = this.midiToFrequency(midi) * xScale;
+        let amplitude = (yScale * yOffset) * (this.amplitudes.get(midi) * 1/this.amplitudes.size);
+        let phase = - this.state.timeOffset;
+        
+        y += amplitude * Math.sin((frequency * (x - xOffset) + phase));
+      }
+      ctx.lineTo(x, y);
+    }
+    
+    ctx.lineTo(w+5, yOffset);
+
+    ctx.stroke();
+  }
+
+  getNormalizeScale = () => {
+    let scale = 1;
+    for (let [, amp] of this.amplitudes) {
+        scale+=amp;
+    }
+    return 1/scale;
+  }
+
+  buildGradient = gradient => {
     gradient.addColorStop(0,'black');
     gradient.addColorStop(0.25,'red');
     gradient.addColorStop(0.75,'magenta');
     gradient.addColorStop(1,'black');
-
-    ctx.clearRect(0, 0, w, h);
-    ctx.beginPath();
-    ctx.moveTo(0, yOffset);
-
-    let ampTotal = 0;
-    for(let[, amp] of this.amplitudes) {
-      ampTotal += amp;
-    }
-
-    for (var x = -5; x < w+5; x+=3) {
-      let y = 0;
-      for(let [midi] of this.amplitudes) {
-        let frequency = this._midiToFrequency(midi) * xScale;
-        let amplitude = this.amplitudes.get(midi) * yScale / (ampTotal + 1);
-        let phase = this.state.timeOffset - xOffset;
-        
-        y += amplitude * Math.sin((frequency * x + phase));
-      }
-      ctx.lineTo(x, y + yOffset);
-    }
-
-    ctx.strokeStyle=gradient;
-    ctx.stroke();
+    return gradient;
   }
 
-  _midiToFrequency = midi => Math.pow(2, (midi-69)/12) * tuneF;
+  midiToFrequency = midi => Math.pow(2, (midi-69)/12) * tuneF;
 
   render() {
     return (
