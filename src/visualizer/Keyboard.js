@@ -26,6 +26,8 @@ class Keyboard extends React.Component {
   static propTypes = {
     onPlayNote: PropTypes.func,
     onStopNote: PropTypes.func,
+    pressedNotes: PropTypes.arrayOf(PropTypes.number),
+    stickyKey: PropTypes.bool.isRequired,
     sustain: PropTypes.bool.isRequired,
     onSustain: PropTypes.func
   }
@@ -39,15 +41,18 @@ class Keyboard extends React.Component {
             instrumentName="acoustic_grand_piano"
             audioContext={audioContext}
             hostname={soundfontHostname}
-            onPlayNote={this.props.onPlayNote}
-            onStopNote={this.props.onStopNote}
             sustain={this.props.sustain}
+            pressedNotes={this.props.pressedNotes}
+            stickyKey={this.props.stickyKey}
             render={({ isLoading, playNote, stopNote }) => (
               <Piano
                 noteRange={noteRange}
                 playNote={playNote}
                 stopNote={stopNote}
+                onPlayNoteInput={this.props.onPlayNote}
+                onStopNoteInput={this.props.onStopNote}
                 disabled={isLoading}
+                activeNotes={this.props.pressedNotes}
                 keyboardShortcuts={keyboardShortcuts}
               />
             )}

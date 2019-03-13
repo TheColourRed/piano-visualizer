@@ -5,9 +5,9 @@ const tuneF = 440;
 const xScale = 0.0001;
 const yScale = 0.95;
 const exposureScale = 1.06;
-const decayActive = 0.97;
-const decayInActive = 0.75;
-const intervalTime = 10;
+const decayActive = 0.98;
+const decayInActive = 0.60;
+const intervalTime = 16.7;
 
 class Canvas extends React.Component {
 
@@ -19,7 +19,6 @@ class Canvas extends React.Component {
     }
 
     this.amplitudes = new Map([]);
-    this.amplitudeTotal = 0;
   }
 
   componentDidMount() {
@@ -28,6 +27,10 @@ class Canvas extends React.Component {
   }
   
   componentDidUpdate(prevProps) {
+    if(prevProps.sustain && prevProps.sustain !== this.props.sustain) {
+      this.amplitudes.clear();
+    }
+
     for(var note of this.props.pressedNotes) {
       if(!prevProps.pressedNotes.includes(note)) {
         this.amplitudes.set(note, 1);
@@ -52,7 +55,11 @@ class Canvas extends React.Component {
 
   updateAmplitudeDecay = () => {
     for (let [midi, amp] of this.amplitudes) {
-      if(amp < 0.002) {
+      if(this.props.stickyKey) {
+        if(!this.props.pressedNotes.includes(midi)) {
+          this.amplitudes.delete(midi);
+        }
+      } else if(amp < 0.002) {
         this.amplitudes.delete(midi);
       } else if (this.props.sustain || this.props.pressedNotes.includes(midi)) {
         this.amplitudes.set(midi, amp * decayActive);
@@ -95,14 +102,6 @@ class Canvas extends React.Component {
     ctx.lineTo(w+5, yOffset);
 
     ctx.stroke();
-  }
-
-  getNormalizeScale = () => {
-    let scale = 1;
-    for (let [, amp] of this.amplitudes) {
-        scale+=amp;
-    }
-    return 1/scale;
   }
 
   buildGradient = gradient => {

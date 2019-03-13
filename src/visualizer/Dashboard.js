@@ -1,7 +1,6 @@
 import React from "react";
-// import InputRange from 'react-input-range';
+import classNames from 'classnames';
 import { Range } from 'react-range';
-// import 'react-input-range/lib/css/index.css';
 class Dashboard extends React.Component {
 
   constructor(props) {
@@ -48,6 +47,14 @@ class Dashboard extends React.Component {
       <div className="h-100 container-fluid">
         <div className="h-100 row vertical-align">
           <div className="col-6">
+          <label>Sticky Keys - No Decay</label>
+            <div className={classNames('dashboard_button', {
+                'dashboard--toggle-on' : this.props.stickyKey
+              })}
+              onMouseDown={this.props.onStickyKey}
+            />
+          </div>
+          <div className="col-6">
             <div>
               <label>{`Exposure: ${this.state.exposure}%`}</label>
               <Range 
@@ -63,14 +70,14 @@ class Dashboard extends React.Component {
               />
             </div>
           </div>
-          <div className="w-100"></div>
+          <div className="col-6"/>
           <div className="col-6">
             <div>
-              <label>{`Δ Phase: ${this.state.phaseChange}% 2π/frame`}</label>
+              <label>{`Δ Phase: ${Number(this.state.phaseChange).toFixed(1)}% 2π/frame`}</label>
               <Range 
                 max={100}
                 min={0} 
-                step={1}
+                step={0.5}
                 values={this.state.phaseChange} 
                 renderTrack={this.renderTrack}
                 renderThumb={this.renderThumb}

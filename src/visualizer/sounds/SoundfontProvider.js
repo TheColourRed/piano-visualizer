@@ -5,9 +5,9 @@ import Soundfont from "soundfont-player";
 class SoundfontProvider extends React.Component {
   static propTypes = {
     instrumentName: PropTypes.string.isRequired,
+    pressedNotes: PropTypes.arrayOf(PropTypes.number),
     sustain: PropTypes.bool.isRequired,
-    onPlayNote: PropTypes.func,
-    onStopNote: PropTypes.func,
+    stickyKey: PropTypes.bool.isRequired,
     hostname: PropTypes.string.isRequired,
     format: PropTypes.oneOf(["mp3", "ogg"]),
     soundfont: PropTypes.oneOf(["MusyngKite", "FluidR3_GM"]),
@@ -38,6 +38,10 @@ class SoundfontProvider extends React.Component {
     if (prevProps.instrumentName !== this.props.instrumentName) {
       this.loadInstrument(this.props.instrumentName);
     }
+    if ((prevProps.sustain && prevProps.sustain !== this.props.sustain) || 
+        (prevProps.stickyKey !== this.props.stickyKey)) {
+      this.stopAllNotes();
+    }
   }
 
   loadInstrument = instrumentName => {
@@ -59,6 +63,14 @@ class SoundfontProvider extends React.Component {
   };
 
   playNote = midiNumber => {
+    const audioNode = this.state.activeAudioNodes[midiNumber];
+    if (audioNode) {
+      if(this.props.stickyKey) {
+        return;
+      } else {
+        audioNode.stop();
+      }
+    }
     this.props.audioContext.resume().then(() => {
       const audioNode = this.state.instrument.play(midiNumber);
       this.setState({
@@ -66,19 +78,12 @@ class SoundfontProvider extends React.Component {
           [midiNumber]: audioNode
         })
       });
-      this.props.onPlayNote(midiNumber);
     });
   };
 
   stopNote = midiNumber => {
     this.props.audioContext.resume().then(() => {
-      // This sets held notes only and sustain should not be acknowledged
-      this.props.onStopNote(midiNumber); 
-      if (this.props.sustain) {
-        const audioNode = this.state.activeAudioNodes[midiNumber];
-        if (audioNode) {
-          audioNode.stop();
-        }
+      if (this.props.sustain || this.props.stickyKey) {
         return;
       }
       const audioNode = this.state.activeAudioNodes[midiNumber];

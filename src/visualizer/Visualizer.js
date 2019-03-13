@@ -11,35 +11,48 @@ class Visualizer extends React.Component {
 
     this.state = {
       pressedNotes: [],
+      stickyKey: false,
       sustain: false,
-      exposure: 20,
-      phaseChange: 1
+      exposure: 25,
+      phaseChange: 2.5
     };
   }
 
   pressNote = midiNumber => {
-    if(this.state.pressedNotes.includes(midiNumber)) {
-      return;
-    } else {
+    if(!this.state.pressedNotes.includes(midiNumber)) {
       this.setState({
         pressedNotes: this.state.pressedNotes.concat(midiNumber)
       });
-    }
-  }
-
-  letGoNote = midiNumber => {
-    if(this.state.pressedNotes.includes(midiNumber)) {
+    } else if(this.state.stickyKey) {
       let arr = [...this.state.pressedNotes];
       arr.splice(arr.indexOf(midiNumber),1);
       this.setState({pressedNotes: arr});
     }
   }
 
-  toggleSustain = () => this.setState({sustain: !this.state.sustain});
-
+  letGoNote = midiNumber => {
+    if(this.state.stickyKey) {
+      // The piano's active status is removed by the time this is called and needs to be re-rendered
+      this.setState({pressedNotes: this.state.pressedNotes.slice()});
+    } else if(this.state.pressedNotes.includes(midiNumber)) {
+      let arr = [...this.state.pressedNotes];
+      arr.splice(arr.indexOf(midiNumber),1);
+      this.setState({pressedNotes: arr});
+    }
+  }
+  
   setExposure = value => this.setState({exposure: value});
-
+  
   setPhaseChange = value =>  this.setState({phaseChange: value});
+
+  toggleSustain = () => this.setState({sustain: !this.state.sustain});
+  
+  toggleStickyKey = () => {
+    this.setState({
+      pressedNotes: [],
+      stickyKey: !this.state.stickyKey
+    });
+  }
 
   render() {
     return (
@@ -52,6 +65,7 @@ class Visualizer extends React.Component {
                 height={height} 
                 pressedNotes={this.state.pressedNotes}
                 sustain={this.state.sustain}
+                stickyKey={this.state.stickyKey}
                 exposure={this.state.exposure}
                 phaseChange={this.state.phaseChange}
               />
@@ -64,14 +78,18 @@ class Visualizer extends React.Component {
             setExposure={this.setExposure}
             phaseChange={this.state.phaseChange}
             setPhaseChange={this.setPhaseChange}
+            stickyKey={this.state.stickyKey}
+            onStickyKey={this.toggleStickyKey}
           />
         </div>
         <div className="keyboard">
           <Keyboard 
             onPlayNote={this.pressNote}
             onStopNote={this.letGoNote}
+            pressedNotes={this.state.stickyKey ? this.state.pressedNotes : undefined}
             sustain={this.state.sustain}
             onSustain={this.toggleSustain}
+            stickyKey={this.state.stickyKey}
           />
         </div>
       </div>
