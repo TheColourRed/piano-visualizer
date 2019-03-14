@@ -1,7 +1,18 @@
 import React from "react";
+import PropTypes from "prop-types";
 import classNames from 'classnames';
 import { Range } from 'react-range';
+
 class Dashboard extends React.Component {
+  
+  static propTypes = {
+    exposure: PropTypes.number.isRequired,
+    setExposure: PropTypes.func,
+    phaseChange: PropTypes.number.isRequired,
+    setPhaseChange: PropTypes.func,
+    stickyKey: PropTypes.bool.isRequired,
+    onStickyKey:  PropTypes.func,
+  }
 
   constructor(props) {
     super(props);

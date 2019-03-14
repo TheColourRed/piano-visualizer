@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Soundfont from "soundfont-player";
 
 class SoundfontProvider extends React.Component {
+  
   static propTypes = {
     instrumentName: PropTypes.string.isRequired,
     pressedNotes: PropTypes.arrayOf(PropTypes.number),

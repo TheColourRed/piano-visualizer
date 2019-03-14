@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const lineWidth = 4;
 const tuneF = 440; 
@@ -10,6 +11,17 @@ const decayInActive = 0.60;
 const intervalTime = 16.7;
 
 class Canvas extends React.Component {
+
+  static propTypes = {
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    pressedNotes: PropTypes.arrayOf(PropTypes.number).isRequired,
+    sustain: PropTypes.bool.isRequired,
+    stickyKey: PropTypes.bool.isRequired,
+    exposure: PropTypes.number.isRequired,
+    phaseChange: PropTypes.number.isRequired
+  }
+
 
   constructor(props) {
     super(props)
