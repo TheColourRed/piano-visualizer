@@ -8,7 +8,6 @@ const yScale = 0.95;
 const exposureScale = 1.06;
 const decayActive = 0.98;
 const decayInActive = 0.60;
-const intervalTime = 16.7;
 
 class Canvas extends React.Component {
 
@@ -22,23 +21,35 @@ class Canvas extends React.Component {
     phaseChange: PropTypes.number.isRequired
   }
 
-
   constructor(props) {
     super(props)
 
     this.state = {
-      timeOffset: 0
+      phaseOffset: 0
     }
 
     this.amplitudes = new Map([]);
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.updateOnInterval, intervalTime);
-    this.updateCanvas();
+    requestAnimationFrame(this.updateCanvas);
   }
   
   componentDidUpdate(prevProps) {
+    this.updateAmplitudeAttack(prevProps);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  updatePhase = () => {
+    this.setState({
+      phaseOffset: this.state.phaseOffset + 2 * Math.PI * this.props.phaseChange / 100
+    });
+  }
+
+  updateAmplitudeAttack = (prevProps) => {
     if(prevProps.sustain && prevProps.sustain !== this.props.sustain) {
       this.amplitudes.clear();
     }
@@ -46,23 +57,8 @@ class Canvas extends React.Component {
     for(var note of this.props.pressedNotes) {
       if(!prevProps.pressedNotes.includes(note)) {
         this.amplitudes.set(note, 1);
-        for (let [midi, amp] of this.amplitudes) {
-          if(amp < 0.25) {
-            this.amplitudes.delete(midi);
-          }
-        }
       }
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-  
-  updateOnInterval = () => {
-    this.setState({timeOffset: this.state.timeOffset + 2 * Math.PI * this.props.phaseChange / 100});
-    this.updateAmplitudeDecay();
-    this.updateCanvas();
   }
 
   updateAmplitudeDecay = () => {
@@ -81,7 +77,25 @@ class Canvas extends React.Component {
     }
   }
 
-  updateCanvas() {
+  buildGradient = gradient => {
+    gradient.addColorStop(0,'black');
+    gradient.addColorStop(0.25,'red');
+    gradient.addColorStop(0.75,'magenta');
+    gradient.addColorStop(1,'black');
+    return gradient;
+  }
+
+  midiToFrequency = midi => Math.pow(2, (midi-69)/12) * tuneF;
+
+  getNormalizationScale = () => {
+    let scale = 0;
+    for(let [,amp] of this.amplitudes) {
+      scale += amp;
+    }
+    return scale < 1 ? 1 : 1/scale;
+  }
+
+  updateCanvas = () => {
     const ctx = this.refs.canvas.getContext('2d');
     let w = this.props.width;
     let h = this.props.height;
@@ -98,13 +112,15 @@ class Canvas extends React.Component {
 
     ctx.beginPath();
 
+    let normalizeScale = this.getNormalizationScale();
+    let phase = - this.state.phaseOffset;
+    
     ctx.moveTo(0, yOffset);
     for (var x = -5; x < w+5; x+=3) {
       let y = yOffset;
       for(let [midi] of this.amplitudes) {
         let frequency = this.midiToFrequency(midi) * xScale;
-        let amplitude = (yScale * yOffset) * (this.amplitudes.get(midi) * 1/this.amplitudes.size);
-        let phase = - this.state.timeOffset;
+        let amplitude = (yScale * yOffset) * (this.amplitudes.get(midi) * normalizeScale);
         
         y += amplitude * Math.sin((frequency * (x - xOffset) + phase));
       }
@@ -114,17 +130,11 @@ class Canvas extends React.Component {
     ctx.lineTo(w+5, yOffset);
 
     ctx.stroke();
-  }
 
-  buildGradient = gradient => {
-    gradient.addColorStop(0,'black');
-    gradient.addColorStop(0.25,'red');
-    gradient.addColorStop(0.75,'magenta');
-    gradient.addColorStop(1,'black');
-    return gradient;
-  }
-
-  midiToFrequency = midi => Math.pow(2, (midi-69)/12) * tuneF;
+    this.updatePhase();
+    this.updateAmplitudeDecay();
+    requestAnimationFrame(this.updateCanvas);
+  } 
 
   render() {
     return (
