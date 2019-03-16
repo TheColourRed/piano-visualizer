@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const lineWidth = 4;
+const lineWidth = 3;
 const tuneF = 440; 
 const xScale = 0.0001;
 const yScale = 0.95;

@@ -1,7 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from 'classnames';
-import { Range } from 'react-range';
+import { Range, getTrackBackground } from 'react-range';
+
+
+  const exposureMax = 100;
+  const exposureMin = 0;
+  const exposureStep = 5;
+  const phaseMax = 100;
+  const phaseMin = 0;
+  const phaseStep = 0.5;
 
 class Dashboard extends React.Component {
   
@@ -23,35 +31,33 @@ class Dashboard extends React.Component {
     }
   }
 
-  renderTrack = ({ props, children }) => (
-    <div
-      {...props}
-      style={{
-        ...props.style,
-        margin: 'auto',
-        height: '0.625em',
-        width: '80%',
-        boxShadow: 'inset 0 3px 2px black',
-        backgroundColor: 'dimGrey'
-      }}
-    >
-      {children}
-    </div>
-  )
-
   renderThumb = ({ props }) => (
-    <div
+    <div className="dashboard_track_thumb"
       {...props}
-      style={{
-        ...props.style,
-        height: '0.625em',
-        width: '0.625em',
-        backgroundColor: '#ccc',
-        borderLeft: 'black solid 0.2em',
-        borderRight: 'black solid 0.2em'
-      }}
+      style={{...props.style}}
     />
   )
+
+  getRenderTrack(values, min, max) {
+    return ({ props, children}) => (
+      <div className="dashboard_track--container">
+        <div className="dashboard_track--outer"
+          style={{...props.style,
+            background: getTrackBackground({
+            values: values,
+            colors: ["transparent", "#666"],
+            min: min,
+            max: max
+            })
+          }}
+        >
+          <div {...props} className="dashboard_track--inner">
+            {children}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   render() {
     return (
@@ -69,11 +75,11 @@ class Dashboard extends React.Component {
             <div>
               <label>{`Exposure: ${this.state.exposure}%`}</label>
               <Range 
-                max={100} 
-                min={0} 
-                step={5}
+                max={exposureMax} 
+                min={exposureMin} 
+                step={exposureStep}
                 values={this.state.exposure} 
-                renderTrack={this.renderTrack}
+                renderTrack={this.getRenderTrack(this.state.exposure, exposureMin, exposureMax)}
                 renderThumb={this.renderThumb}
                 onChange={value => {
                     this.setState({exposure: value}); 
@@ -86,11 +92,11 @@ class Dashboard extends React.Component {
             <div>
               <label>{`Δ Phase: ${Number(this.state.phaseChange).toFixed(1)}% 2π/frame`}</label>
               <Range 
-                max={100}
-                min={0} 
-                step={0.5}
+                max={phaseMax}
+                min={phaseMin} 
+                step={phaseStep}
                 values={this.state.phaseChange} 
-                renderTrack={this.renderTrack}
+                renderTrack={this.getRenderTrack(this.state.phaseChange, phaseMin, phaseMax)}
                 renderThumb={this.renderThumb}
                 onChange={value => {
                   this.setState({phaseChange: value}); 
