@@ -2,6 +2,7 @@ import React from "react";
 import Canvas from "./Canvas";
 import Keyboard from "./Keyboard";
 import Dashboard from "./Dashboard";
+import GradientColorPicker from "./GradientColorPicker"
 import ContainerDimensions from 'react-container-dimensions'
 
 class Visualizer extends React.Component {
@@ -63,23 +64,24 @@ class Visualizer extends React.Component {
   render() {
     return (
       <div className="visualizer">
-        <div className="canvas-border-wrap"><div className="canvas">
-          <ContainerDimensions>
-            { ({ width, height }) => 
-              <Canvas 
-                width={width} 
-                height={height} 
-                pressedNotes={this.state.pressedNotes}
-                sustain={this.state.sustain}
-                stickyKey={this.state.stickyKey}
-                exposure={this.state.exposure}
-                phaseChange={this.state.phaseChange}
-                scale={this.state.scale}
-                translate={this.state.translate}
-              />
-            }
-          </ContainerDimensions>
-          </div></div>
+        <GradientColorPicker/>
+          <div className="canvas">
+            <ContainerDimensions>
+              { ({ width, height }) => 
+                <Canvas 
+                  width={width} 
+                  height={height} 
+                  pressedNotes={this.state.pressedNotes}
+                  sustain={this.state.sustain}
+                  stickyKey={this.state.stickyKey}
+                  exposure={this.state.exposure}
+                  phaseChange={this.state.phaseChange}
+                  scale={this.state.scale}
+                  translate={this.state.translate}
+                />
+              }
+            </ContainerDimensions>
+          </div>
         <div className="dashboard">
           <Dashboard 
             exposure={this.state.exposure}

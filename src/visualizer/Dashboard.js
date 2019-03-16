@@ -46,7 +46,7 @@ class Dashboard extends React.Component {
     }
   }
 
-  renderThumb = ({ props }) => (
+  renderThumb = ({ props, isDragged }) => (
     <div className="dashboard_track_thumb"
       {...props}
       style={{...props.style}}
