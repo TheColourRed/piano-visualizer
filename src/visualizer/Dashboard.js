@@ -56,17 +56,16 @@ class Dashboard extends React.Component {
   getRenderTrack(values, min, max) {
     return ({ props, children}) => (
       <div className="dashboard_track--container">
-        <div className="dashboard_track--outer"
+        <div className="dashboard_track--progress"
           style={{...props.style,
             background: getTrackBackground({
-            values: values,
-            colors: ["transparent", "#666"],
-            min: min,
-            max: max
+              values: values,
+              colors: ["transparent", "#666"],
+              min: min,
+              max: max
             })
-          }}
-        >
-          <div {...props} className="dashboard_track--inner">
+        }}>
+          <div {...props} className="dashboard_track">
             {children}
           </div>
         </div>
