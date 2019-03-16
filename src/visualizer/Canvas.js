@@ -18,7 +18,9 @@ class Canvas extends React.Component {
     sustain: PropTypes.bool.isRequired,
     stickyKey: PropTypes.bool.isRequired,
     exposure: PropTypes.number.isRequired,
-    phaseChange: PropTypes.number.isRequired
+    phaseChange: PropTypes.number.isRequired,
+    scale: PropTypes.number.isRequired,
+    translate: PropTypes.number.isRequired,
   }
 
   constructor(props) {
@@ -114,7 +116,6 @@ class Canvas extends React.Component {
 
     let normalizeScale = this.getNormalizationScale();
     let phase = - this.state.phaseOffset;
-    
     ctx.moveTo(0, yOffset);
     for (var x = -5; x < w+5; x+=3) {
       let y = yOffset;
@@ -122,7 +123,7 @@ class Canvas extends React.Component {
         let frequency = this.midiToFrequency(midi) * xScale;
         let amplitude = (yScale * yOffset) * (this.amplitudes.get(midi) * normalizeScale);
         
-        y += amplitude * Math.sin((frequency * (x - xOffset) + phase));
+        y += amplitude * Math.sin(frequency * (this.props.scale * (x - xOffset - this.props.translate)) + phase);
       }
       ctx.lineTo(x, y);
     }

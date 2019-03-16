@@ -7,6 +7,7 @@ class SoundfontProvider extends React.Component {
   static propTypes = {
     instrumentName: PropTypes.string.isRequired,
     pressedNotes: PropTypes.arrayOf(PropTypes.number),
+    onStopNote: PropTypes.func, 
     sustain: PropTypes.bool.isRequired,
     stickyKey: PropTypes.bool.isRequired,
     hostname: PropTypes.string.isRequired,
@@ -83,6 +84,8 @@ class SoundfontProvider extends React.Component {
   };
 
   stopNote = midiNumber => {
+    this.props.onStopNote(midiNumber);
+
     this.props.audioContext.resume().then(() => {
       if (this.props.sustain || this.props.stickyKey) {
         return;

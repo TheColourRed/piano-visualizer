@@ -14,7 +14,9 @@ class Visualizer extends React.Component {
       stickyKey: false,
       sustain: false,
       exposure: 25,
-      phaseChange: 2.5
+      phaseChange: 2.5,
+      scale: 1,
+      translate: 0
     };
   }
 
@@ -30,7 +32,7 @@ class Visualizer extends React.Component {
     }
   }
 
-  letGoNote = midiNumber => {
+  onStopNote = midiNumber => {
     if(this.state.stickyKey) {
       // The piano's active status is removed by the time this is called and needs to be re-rendered
       this.setState({pressedNotes: this.state.pressedNotes.slice()});
@@ -44,6 +46,10 @@ class Visualizer extends React.Component {
   setExposure = value => this.setState({exposure: value});
   
   setPhaseChange = value =>  this.setState({phaseChange: value});
+
+  setScale = value => this.setState({scale: value});
+
+  setTranslate = value => this.setState({translate: value});
 
   toggleSustain = () => this.setState({sustain: !this.state.sustain});
   
@@ -68,6 +74,8 @@ class Visualizer extends React.Component {
                 stickyKey={this.state.stickyKey}
                 exposure={this.state.exposure}
                 phaseChange={this.state.phaseChange}
+                scale={this.state.scale}
+                translate={this.state.translate}
               />
             }
           </ContainerDimensions>
@@ -78,14 +86,18 @@ class Visualizer extends React.Component {
             setExposure={this.setExposure}
             phaseChange={this.state.phaseChange}
             setPhaseChange={this.setPhaseChange}
+            scale={this.state.scale} 
+            setScale={this.setScale}
+            translate={this.state.translate}
+            setTranslate={this.setTranslate}
             stickyKey={this.state.stickyKey}
             onStickyKey={this.toggleStickyKey}
           />
         </div>
         <div className="keyboard">
           <Keyboard 
-            onPlayNote={this.pressNote}
-            onStopNote={this.letGoNote}
+            onPlayNoteInput={this.pressNote}
+            onStopNote={this.onStopNote}
             pressedNotes={this.state.stickyKey ? this.state.pressedNotes : undefined}
             sustain={this.state.sustain}
             onSustain={this.toggleSustain}
