@@ -20,6 +20,9 @@ import { Range, getTrackBackground } from 'react-range';
   const translateMin = -999;
   const translateStep = 1;
 
+  const colorStopMax = 10;
+  const colorStopMin = 2;
+
 class Dashboard extends React.Component {
   
   static propTypes = {
@@ -32,7 +35,10 @@ class Dashboard extends React.Component {
     translate: PropTypes.number.isRequired,
     setTranslate: PropTypes.func.isRequired,
     stickyKey: PropTypes.bool.isRequired,
-    onStickyKey:  PropTypes.func.isRequired
+    onStickyKey:  PropTypes.func.isRequired,
+    colorStopCount: PropTypes.number.isRequired,
+    onAddColorStop: PropTypes.func.isRequired,
+    onRemoveColorStop: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -89,28 +95,35 @@ class Dashboard extends React.Component {
     return (
       <div className="h-100 container-fluid"> 
         <div className="h-100 row vertical-align">
-          {/* Left column */}
-          <div className="col-1 p-3 h-100">
+        {/* Right Column */}
+        <div className="col-4 h-100">
             <div className="row h-50 py-2 vertical-align">
-              
+              <label>{`Translate: ${this.state.translate} rads`}</label>
+              <Range 
+                max={translateMax} 
+                min={translateMin} 
+                step={translateStep}
+                values={this.state.translate} 
+                renderTrack={this.getRenderTrack(this.state.translate, translateMin, translateMax)}
+                renderThumb={this.renderThumb}
+                onChange={value => {
+                    this.setState({translate: value}); 
+                    this.props.setTranslate(value[0])}} 
+              />
             </div>
             <div className="row h-50 py-2 vertical-align">
-            
-            </div>
-          </div>
-          {/* Second Left column */}
-          <div className="col-3 h-100">
-            <div className="row h-50 py-2 vertical-align">
-              <label>Sticky Keys - No Decay</label>
-              <div className="w-100">
-                <div className={classNames('dashboard_button', {
-                    'dashboard--toggle-on' : this.props.stickyKey
-                  })}
-                  onMouseDown={this.props.onStickyKey}
-                />
-              </div>
-            </div>
-            <div className="h-50 row vertical-align">
+              <label>{`Scale: X${this.rangeToScaleString(this.state.scaleRange)}`}</label>
+              <Range 
+                max={scaleMax} 
+                min={scaleMin} 
+                step={scaleStep}
+                values={this.state.scaleRange} 
+                renderTrack={this.getRenderTrack(this.state.scaleRange, scaleMin, scaleMax)}
+                renderThumb={this.renderThumb}
+                onChange={value => {
+                    this.setState({scaleRange: value}); 
+                    this.props.setScale(this.rangeToScale(value[0]))}} 
+              />
             </div>
           </div>
           {/* Middle Column */}
@@ -144,35 +157,34 @@ class Dashboard extends React.Component {
               />       
             </div>
           </div>
-          {/* Right Column */}
-          <div className="col-4 h-100">
+          {/* Right column */}
+          <div className="col-2 h-100">
             <div className="row h-50 py-2 vertical-align">
-              <label>{`Translate: ${this.state.translate} rads`}</label>
-              <Range 
-                max={translateMax} 
-                min={translateMin} 
-                step={translateStep}
-                values={this.state.translate} 
-                renderTrack={this.getRenderTrack(this.state.translate, translateMin, translateMax)}
-                renderThumb={this.renderThumb}
-                onChange={value => {
-                    this.setState({translate: value}); 
-                    this.props.setTranslate(value[0])}} 
-              />
+              <label>Sticky Keys - No Decay</label>
+              <div className="w-100">
+                <div className={classNames('dashboard_button', {
+                    'dashboard--toggle-on' : this.props.stickyKey
+                  })}
+                  onMouseDown={this.props.onStickyKey}
+                />
+              </div>
+            </div>
+            <div className="h-50 row vertical-align">
+                
+            </div>
+          </div>
+          {/* Far Right column */}
+          <div className="col-2 h-100">
+            <div className="row h-50 py-2 vertical-align">
+              <label>{`Color stops: ${this.props.colorStopCount}`}</label>
+              <div className="w-100 px-5">
+                <div className="dashboard_button--up" 
+                  onMouseDown={this.props.colorStopCount < colorStopMax ? this.props.onAddColorStop : null}/>
+                <div className="dashboard_button--down" 
+                  onMouseDown={this.props.colorStopCount > colorStopMin ? this.props.onRemoveColorStop : null}/>
+              </div>
             </div>
             <div className="row h-50 py-2 vertical-align">
-              <label>{`Scale: X${this.rangeToScaleString(this.state.scaleRange)}`}</label>
-              <Range 
-                max={scaleMax} 
-                min={scaleMin} 
-                step={scaleStep}
-                values={this.state.scaleRange} 
-                renderTrack={this.getRenderTrack(this.state.scaleRange, scaleMin, scaleMax)}
-                renderThumb={this.renderThumb}
-                onChange={value => {
-                    this.setState({scaleRange: value}); 
-                    this.props.setScale(this.rangeToScale(value[0]))}} 
-              />
             </div>
           </div>
         </div>

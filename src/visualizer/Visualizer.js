@@ -68,7 +68,7 @@ class Visualizer extends React.Component {
   }
 
   onColorChange = (color, index) => {
-    let arr = this.state.colors;
+    let arr = [...this.state.colors];
     arr[index] = color.rgb;
     this.setState({ colors: arr })
   }
@@ -76,6 +76,31 @@ class Visualizer extends React.Component {
   onColorValueChange = (colorValues) => {
     this.setState({ colorValues: colorValues })
   }
+
+  addColorStop = () => {
+    let colorArr = [...this.state.colors];
+    let valueArr = [];
+    
+    colorArr.push(colorArr[colorArr.length-1]);
+    for(var i = 1; i <= colorArr.length; i++) {
+      valueArr.push(Math.floor(i * 100 / (colorArr.length + 1)));
+    }
+
+    this.setState({ colors: colorArr, colorValues: valueArr })
+  }
+
+  removeColorStop = () => {
+    let colorArr = [...this.state.colors];
+    let valueArr = [];
+    
+    colorArr.pop();
+    for(var i = 1; i <= colorArr.length; i++) {
+      valueArr.push(Math.floor(i * 100 / (colorArr.length + 1)));
+    }
+
+    this.setState({ colors: colorArr, colorValues: valueArr })
+  }
+
 
   setGradient = () => {
     let gradient = `linear-gradient(to right, `
@@ -132,6 +157,9 @@ class Visualizer extends React.Component {
             setTranslate={this.setTranslate}
             stickyKey={this.state.stickyKey}
             onStickyKey={this.toggleStickyKey}
+            colorStopCount={this.state.colors.length}
+            onAddColorStop={this.addColorStop}
+            onRemoveColorStop={this.removeColorStop}
           />
         </div>
         <div className="keyboard">
