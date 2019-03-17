@@ -12,8 +12,8 @@ import { Range, getTrackBackground } from 'react-range';
   const phaseMin = 0;
   const phaseStep = 0.5;
 
-  const scaleMax = 10;
-  const scaleMin = 1;
+  const scaleMax = 5;
+  const scaleMin = -5;
   const scaleStep = 1;
 
   const translateMax = 999;
@@ -41,7 +41,7 @@ class Dashboard extends React.Component {
     this.state = {
       exposure: [this.props.exposure],
       phaseChange: [this.props.phaseChange],
-      scale: [this.props.scale],
+      scaleRange: [this.scaleToRange(this.props.scale)],
       translate: [this.props.translate] 
     }
   }
@@ -73,6 +73,18 @@ class Dashboard extends React.Component {
     )
   }
 
+  scaleToRange = (value) => {
+    return Math.log(value)/Math.log(2);
+  }
+
+  rangeToScale = (value) => {
+    return 2 ** value;
+  }
+
+  rangeToScaleString = (value) => {
+    return value >= 0 ? 2 ** value : `1/${2 ** -(value)}`;
+  }
+
   render() {
     return (
       <div className="h-100 container-fluid">
@@ -86,17 +98,17 @@ class Dashboard extends React.Component {
             />
           </div>
           <div className="col-4">
-            <label>{`Scale: X${this.state.scale}`}</label>
+            <label>{`Scale: X${this.rangeToScaleString(this.state.scaleRange)}`}</label>
             <Range 
               max={scaleMax} 
               min={scaleMin} 
               step={scaleStep}
-              values={this.state.scale} 
-              renderTrack={this.getRenderTrack(this.state.scale, scaleMin, scaleMax)}
+              values={this.state.scaleRange} 
+              renderTrack={this.getRenderTrack(this.state.scaleRange, scaleMin, scaleMax)}
               renderThumb={this.renderThumb}
               onChange={value => {
-                  this.setState({scale: value}); 
-                  this.props.setScale(value[0])}} 
+                  this.setState({scaleRange: value}); 
+                  this.props.setScale(this.rangeToScale(value[0]))}} 
             />
           </div>
           <div className="col-4">
