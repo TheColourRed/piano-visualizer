@@ -5,6 +5,7 @@ class Banner extends React.Component {
     return (
       <div className="banner">
         <img className="banner--text" src={require('./res/SINE WAVES & SUMS.svg')} alt={'Sine waves & Sums'}/>
+        <div className="banner--gradient"/>
       </div>
     );
   }

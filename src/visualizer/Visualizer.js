@@ -3,6 +3,7 @@ import Canvas from "./Canvas";
 import Keyboard from "./Keyboard";
 import Dashboard from "./Dashboard";
 import GradientColorPicker from "./GradientColorPicker"
+import CustomProperties from "react-custom-properties";
 import ContainerDimensions from 'react-container-dimensions'
 
 class Visualizer extends React.Component {
@@ -76,15 +77,22 @@ class Visualizer extends React.Component {
     this.setState({ colorValues: colorValues })
   }
 
+  setGradient = () => {
+    let gradient = `linear-gradient(to right, `
+    for(var i = 0; i < this.state.colors.length; i++) {
+      gradient += `rgba(${ this.state.colors[i].r }, ${ this.state.colors[i].g }, ${ this.state.colors[i].b}, 1) ${this.state.colorValues[i]}%`;
+      if(i < this.state.colors.length - 1) {
+        gradient += ', '
+      }
+    }
+    gradient += ')';
+    return gradient;
+  }
+
   render() {
     return (
       <div className="visualizer">
-        <GradientColorPicker
-          colors={this.state.colors}
-          colorValues={this.state.colorValues}
-          onColorChange={this.onColorChange}
-          onColorValueChange={this.onColorValueChange}
-        />
+        <CustomProperties global properties={{'--main-gradient': this.setGradient()}}/>
         <div className="canvas">
           <ContainerDimensions>
             {({ width, height }) => 
@@ -103,6 +111,14 @@ class Visualizer extends React.Component {
               />
             }
           </ContainerDimensions>
+        </div>
+        <div className="gradientColorPicker">
+          <GradientColorPicker
+            colors={this.state.colors}
+            colorValues={this.state.colorValues}
+            onColorChange={this.onColorChange}
+            onColorValueChange={this.onColorValueChange}
+          />
         </div>
         <div className="dashboard">
           <Dashboard 

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { ChromePicker } from 'react-color';
 import { Range } from 'react-range';
 import { CSSTransition } from "react-transition-group"
-import CustomProperties from "react-custom-properties";
 
 const MAX = 100;
 const MIN = 0;
@@ -76,7 +75,7 @@ class GradientColorPicker extends React.Component {
               this.setDisplayColorPicker(index, false);
             }} 
             style={{
-              transform: `translate(${(-100 * ((this.props.colorValues[index] - mid)/mid)) - 100}px, 20px)`
+              transform: `translate(${(-100 * ((this.props.colorValues[index] - mid)/mid)) - 100}px, -235px)`
             }}
           >
             <ChromePicker disableAlpha={true} color={ this.props.colors[index] } onChange={ (color) => this.props.onColorChange(color, index) } />
@@ -100,33 +99,18 @@ class GradientColorPicker extends React.Component {
     )
   }
 
-  setGradient = (colors) => {
-    let gradient = `linear-gradient(to right, `
-    for(var i = 0; i < colors.length; i++) {
-      gradient += `rgba(${ colors[i].r }, ${ colors[i].g }, ${ colors[i].b}, 1) ${this.props.colorValues[i]}%`;
-      if(i < colors.length - 1) {
-        gradient += ', '
-      }
-    }
-    gradient += ')';
-    return gradient;
-  }
-
   render() {
     return (
-      <div className="gradientColorPicker">
-        <CustomProperties global properties={{'--main-gradient': this.setGradient(this.props.colors)}}/>
-        <Range 
-          disabled={this.state.disableRange}
-          values={this.props.colorValues}
-          step={STEP}
-          min={MIN}
-          max={MAX}
-          onChange={values => this.props.onColorValueChange(values)}
-          renderTrack={this.getRenderTrack(this.props.colorValues, MIN, MAX)}
-          renderThumb={this.renderThumb}
-        />
-      </div>
+      <Range 
+        disabled={this.state.disableRange}
+        values={this.props.colorValues}
+        step={STEP}
+        min={MIN}
+        max={MAX}
+        onChange={values => this.props.onColorValueChange(values)}
+        renderTrack={this.getRenderTrack(this.props.colorValues, MIN, MAX)}
+        renderThumb={this.renderThumb}
+      />
     );
   }
 }

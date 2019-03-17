@@ -32,8 +32,16 @@ label {
 
 .banner {
   background-image: linear-gradient(to right, #000000, #444444, #000000);
-  padding: 12px;
+  padding: 5px;
   height: 4%;
+}
+
+.banner--gradient {
+  height: 2px;
+  margin-top: 5px;
+  background-image: 
+    linear-gradient(to right, black, transparent, transparent, black),
+    var(--main-gradient);
 }
 
 .banner--text {
@@ -48,7 +56,6 @@ label {
 
 .gradientColorPicker--container {
   height: 100%;
-  width: 100;
   background-image: 
     linear-gradient(to right, black, transparent, transparent, black),
     var(--main-gradient);
