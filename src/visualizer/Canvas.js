@@ -14,6 +14,8 @@ class Canvas extends React.Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
+    colors: PropTypes.arrayOf(PropTypes.object),
+    colorValues: PropTypes.arrayOf(PropTypes.number),
     pressedNotes: PropTypes.arrayOf(PropTypes.number).isRequired,
     sustain: PropTypes.bool.isRequired,
     stickyKey: PropTypes.bool.isRequired,
@@ -81,8 +83,13 @@ class Canvas extends React.Component {
 
   buildGradient = gradient => {
     gradient.addColorStop(0,'black');
-    gradient.addColorStop(0.25,'red');
-    gradient.addColorStop(0.75,'magenta');
+
+    for(var i = 0; i < this.props.colors.length; i++) {
+      gradient.addColorStop(
+        this.props.colorValues[i]/100, 
+        `rgba(${ this.props.colors[i].r }, ${ this.props.colors[i].g }, ${ this.props.colors[i].b}, 1)`);
+    }
+
     gradient.addColorStop(1,'black');
     return gradient;
   }

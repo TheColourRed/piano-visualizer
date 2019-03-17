@@ -6,7 +6,7 @@ import GradientColorPicker from "./GradientColorPicker"
 import ContainerDimensions from 'react-container-dimensions'
 
 class Visualizer extends React.Component {
-  
+
   constructor(props) {
     super(props);
 
@@ -17,7 +17,12 @@ class Visualizer extends React.Component {
       exposure: 25,
       phaseChange: 2.5,
       scale: 1,
-      translate: 0
+      translate: 0,
+      colors: [
+        {r: '220', g: '20', b: '60', a: '1'}, 
+        {r: '255', g: '0', b: '255', a: '1'}
+      ],
+      colorValues: [33, 66]
     };
   }
 
@@ -61,27 +66,44 @@ class Visualizer extends React.Component {
     });
   }
 
+  onColorChange = (color, index) => {
+    let arr = this.state.colors;
+    arr[index] = color.rgb;
+    this.setState({ colors: arr })
+  }
+
+  onColorValueChange = (colorValues) => {
+    this.setState({ colorValues: colorValues })
+  }
+
   render() {
     return (
       <div className="visualizer">
-        <GradientColorPicker/>
-          <div className="canvas">
-            <ContainerDimensions>
-              { ({ width, height }) => 
-                <Canvas 
-                  width={width} 
-                  height={height} 
-                  pressedNotes={this.state.pressedNotes}
-                  sustain={this.state.sustain}
-                  stickyKey={this.state.stickyKey}
-                  exposure={this.state.exposure}
-                  phaseChange={this.state.phaseChange}
-                  scale={this.state.scale}
-                  translate={this.state.translate}
-                />
-              }
-            </ContainerDimensions>
-          </div>
+        <GradientColorPicker
+          colors={this.state.colors}
+          colorValues={this.state.colorValues}
+          onColorChange={this.onColorChange}
+          onColorValueChange={this.onColorValueChange}
+        />
+        <div className="canvas">
+          <ContainerDimensions>
+            {({ width, height }) => 
+              <Canvas 
+                width={width} 
+                height={height} 
+                colors={this.state.colors}
+                colorValues={this.state.colorValues}
+                pressedNotes={this.state.pressedNotes}
+                sustain={this.state.sustain}
+                stickyKey={this.state.stickyKey}
+                exposure={this.state.exposure}
+                phaseChange={this.state.phaseChange}
+                scale={this.state.scale}
+                translate={this.state.translate}
+              />
+            }
+          </ContainerDimensions>
+        </div>
         <div className="dashboard">
           <Dashboard 
             exposure={this.state.exposure}
