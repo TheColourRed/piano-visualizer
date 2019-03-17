@@ -117,13 +117,13 @@ label {
 }
 
 .keyboard {
-  height: 20%;
+  height: 18%;
   background-image: linear-gradient(#333333, #444444);
 }
 
 .keyboard_keys {
   height: 75%;
-  padding-top: 1.625em;
+  padding-top: 0.625em;
   padding-left: 1.625em;
   padding-right: 1.625em;
   padding-bottom: 0.5em;
@@ -165,7 +165,7 @@ label {
 }
 
 .dashboard {
-  height: 10%;
+  height: 12%;
   text-align: center;
   background-image: linear-gradient(#222222, #444444);
   border-bottom: #3a3a3a solid 0.5vh;
@@ -173,8 +173,10 @@ label {
 }
 
 .dashboard_track--container {
-  border-radius: 4px;
+  margin: auto;
+  height: 1em;
   width: 95%;
+  border-radius: 4px;
   background-image: var(--main-gradient);
 }
 
@@ -182,11 +184,13 @@ label {
   border-radius: 4px;
   box-shadow: 
     inset -2px 4px 2px black, 
-    inset 2px 4px 2px black;
+    inset 2px 4px 2px black,
+    0 1px 4px black;
 }
 
 .dashboard_track {
   margin: auto;
+  position: relative;
   width: 96%;
   height: 1em;
   border-radius: 4px;
@@ -203,13 +207,13 @@ label {
     linear-gradient(to right, grey, transparent 12.5%), 
     linear-gradient(to top, grey, #111 25%, transparent 75%);
   border-radius: 4px;
-  bottom: calc(0.4em + 0.0625em);
-  box-shadow: 0 0.4em 0em #111;
+  top: -0.25em;
+  box-shadow: 0 0.4em 0 #111;
 }
 
 .dashboard_button {
-  width: 5em;
   height: 1.25em;
+  width: 5em;
   position: relative;
   margin: auto;
   background-color: #666;

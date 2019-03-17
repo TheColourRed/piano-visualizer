@@ -87,74 +87,93 @@ class Dashboard extends React.Component {
 
   render() {
     return (
-      <div className="h-100 container-fluid">
+      <div className="h-100 container-fluid"> 
         <div className="h-100 row vertical-align">
-          <div className="col-4">
-            <label>Sticky Keys - No Decay</label>
-            <div className={classNames('dashboard_button', {
-                'dashboard--toggle-on' : this.props.stickyKey
-              })}
-              onMouseDown={this.props.onStickyKey}
-            />
+          {/* Left column */}
+          <div className="col-1 p-3 h-100">
+            <div className="row h-50 py-2 vertical-align">
+              
+            </div>
+            <div className="row h-50 py-2 vertical-align">
+            
+            </div>
           </div>
-          <div className="col-4">
-            <label>{`Scale: X${this.rangeToScaleString(this.state.scaleRange)}`}</label>
-            <Range 
-              max={scaleMax} 
-              min={scaleMin} 
-              step={scaleStep}
-              values={this.state.scaleRange} 
-              renderTrack={this.getRenderTrack(this.state.scaleRange, scaleMin, scaleMax)}
-              renderThumb={this.renderThumb}
-              onChange={value => {
-                  this.setState({scaleRange: value}); 
-                  this.props.setScale(this.rangeToScale(value[0]))}} 
-            />
+          {/* Second Left column */}
+          <div className="col-3 h-100">
+            <div className="row h-50 py-2 vertical-align">
+              <label>Sticky Keys - No Decay</label>
+              <div className="w-100">
+                <div className={classNames('dashboard_button', {
+                    'dashboard--toggle-on' : this.props.stickyKey
+                  })}
+                  onMouseDown={this.props.onStickyKey}
+                />
+              </div>
+            </div>
+            <div className="h-50 row vertical-align">
+            </div>
           </div>
-          <div className="col-4">
-            <label>{`Translate: ${this.state.translate} rads`}</label>
-            <Range 
-              max={translateMax} 
-              min={translateMin} 
-              step={translateStep}
-              values={this.state.translate} 
-              renderTrack={this.getRenderTrack(this.state.translate, translateMin, translateMax)}
-              renderThumb={this.renderThumb}
-              onChange={value => {
-                  this.setState({translate: value}); 
-                  this.props.setTranslate(value[0])}} 
-            />
+          {/* Middle Column */}
+          <div className="col-4 h-100">
+            <div className="row h-50 py-2 vertical-align">
+              <label>{`Exposure: ${this.state.exposure}%`}</label>
+              <Range 
+                max={exposureMax} 
+                min={exposureMin} 
+                step={exposureStep}
+                values={this.state.exposure} 
+                renderTrack={this.getRenderTrack(this.state.exposure, exposureMin, exposureMax)}
+                renderThumb={this.renderThumb}
+                onChange={value => {
+                    this.setState({exposure: value}); 
+                    this.props.setExposure(value[0])}} 
+              />
+            </div>
+            <div className="row h-50 py-2 vertical-align">
+              <label>{`Δ Phase: ${Number(this.state.phaseChange).toFixed(1)}% 2π/frame`}</label>
+              <Range 
+                max={phaseMax}
+                min={phaseMin} 
+                step={phaseStep}
+                values={this.state.phaseChange} 
+                renderTrack={this.getRenderTrack(this.state.phaseChange, phaseMin, phaseMax)}
+                renderThumb={this.renderThumb}
+                onChange={value => {
+                  this.setState({phaseChange: value}); 
+                  this.props.setPhaseChange(value[0])}} 
+              />       
+            </div>
           </div>
-          <div className="col-4">
-              {/* Column for other buttons */}
-          </div>
-          <div className="col-4">
-            <label>{`Exposure: ${this.state.exposure}%`}</label>
-            <Range 
-              max={exposureMax} 
-              min={exposureMin} 
-              step={exposureStep}
-              values={this.state.exposure} 
-              renderTrack={this.getRenderTrack(this.state.exposure, exposureMin, exposureMax)}
-              renderThumb={this.renderThumb}
-              onChange={value => {
-                  this.setState({exposure: value}); 
-                  this.props.setExposure(value[0])}} 
-            />
-          </div>
-          <div className="col-4">
-            <label>{`Δ Phase: ${Number(this.state.phaseChange).toFixed(1)}% 2π/frame`}</label>
-            <Range 
-              max={phaseMax}
-              min={phaseMin} 
-              step={phaseStep}
-              values={this.state.phaseChange} 
-              renderTrack={this.getRenderTrack(this.state.phaseChange, phaseMin, phaseMax)}
-              renderThumb={this.renderThumb}
-              onChange={value => {
-                this.setState({phaseChange: value}); 
-                this.props.setPhaseChange(value[0])}} 
-            />       
+          {/* Right Column */}
+          <div className="col-4 h-100">
+            <div className="row h-50 py-2 vertical-align">
+              <label>{`Translate: ${this.state.translate} rads`}</label>
+              <Range 
+                max={translateMax} 
+                min={translateMin} 
+                step={translateStep}
+                values={this.state.translate} 
+                renderTrack={this.getRenderTrack(this.state.translate, translateMin, translateMax)}
+                renderThumb={this.renderThumb}
+                onChange={value => {
+                    this.setState({translate: value}); 
+                    this.props.setTranslate(value[0])}} 
+              />
+            </div>
+            <div className="row h-50 py-2 vertical-align">
+              <label>{`Scale: X${this.rangeToScaleString(this.state.scaleRange)}`}</label>
+              <Range 
+                max={scaleMax} 
+                min={scaleMin} 
+                step={scaleStep}
+                values={this.state.scaleRange} 
+                renderTrack={this.getRenderTrack(this.state.scaleRange, scaleMin, scaleMax)}
+                renderThumb={this.renderThumb}
+                onChange={value => {
+                    this.setState({scaleRange: value}); 
+                    this.props.setScale(this.rangeToScale(value[0]))}} 
+              />
+            </div>
           </div>
         </div>
       </div>
