@@ -4,7 +4,9 @@
   "description": "",
   "keywords": [],
   "main": "src/index.js",
+  "bin": "bin.js",
   "dependencies": {
+    "@babel/plugin-syntax-export-default-from": "^7.2.0",
     "bootstrap": "4.3.1",
     "chroma-js": "^2.0.3",
     "classnames": "^2.2.6",
@@ -20,7 +22,7 @@
     "react-numeric-input": "^2.2.3",
     "react-piano": "3.1.2",
     "react-range": "^1.0.4",
-    "react-scripts": "2.0.3",
+    "react-scripts": "^2.1.8",
     "react-select": "^2.4.2",
     "react-transition-group": "^2.6.1",
     "soundfont-player": "0.11.0"

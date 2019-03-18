@@ -95,9 +95,9 @@ class Dashboard extends React.Component {
 
   render() {
     let selectStyle = {
-      control: styles => ({ ...styles, backgroundColor: 'dimgrey', color: 'black'}),
-      placeholder: styles => ({ ...styles, color: 'black' }),
-      singleValue: (styles, { data }) => ({ ...styles, color: 'black' }),
+      control: styles => ({ ...styles, borderColor: 'black', backgroundColor: '#404040', color: 'white'}),
+      placeholder: styles => ({ ...styles,  borderColor: 'black', color: 'white' }),
+      singleValue: (styles, { data }) => ({ ...styles, borderColor: 'black', color: 'white' }),
       option: (styles, { data, isDisabled, isFocused, isSelected }) => {
         return {...styles,
           backgroundColor: isDisabled ? null : isSelected ? 'black' : isFocused ? 'lightgrey' : 'grey',
