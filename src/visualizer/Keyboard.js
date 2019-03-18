@@ -33,6 +33,37 @@ class Keyboard extends React.Component {
     onSustain: PropTypes.func
   }
 
+  down = false;
+
+  componentDidMount(){
+    document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("keyup", this.handleKeyUp);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener("keyup", this.handleKeyUp);
+  }                            
+
+  handleKeyDown = event => {
+    if(this.down) {
+      return;
+    } else {
+      this.down = true;
+    }
+
+    if (event.key === ' ') {
+      this.props.onSustain();
+    }
+  };
+
+  handleKeyUp = event => {
+    this.down = false;
+    if (event.key === ' ') {
+      this.props.onSustain();
+    }
+  };
+
   render() {
     return (
       <div className="h-100">

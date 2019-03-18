@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import bootstrap from "bootstrap"; // eslint-disable-line no-unused-vars
-import CustomProperties from 'react-custom-properties';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Banner from "./visualizer/Banner";
 import Visualizer from "./visualizer/Visualizer";
