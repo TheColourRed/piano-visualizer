@@ -3,6 +3,7 @@ import Canvas from "./Canvas";
 import Keyboard from "./Keyboard";
 import Dashboard from "./Dashboard";
 import GradientColorPicker from "./GradientColorPicker"
+import themes from './res/Themes';
 import CustomProperties from "react-custom-properties";
 import ContainerDimensions from 'react-container-dimensions'
 
@@ -19,11 +20,8 @@ class Visualizer extends React.Component {
       phaseChange: 2.5,
       scale: 1,
       translate: 0,
-      colors: [
-        {r: '220', g: '20', b: '60', a: '1'}, 
-        {r: '255', g: '0', b: '255', a: '1'}
-      ],
-      colorValues: [33, 66]
+      colors: themes[0].value.colors,
+      colorValues: themes[0].value.values
     };
   }
 
@@ -98,9 +96,13 @@ class Visualizer extends React.Component {
       valueArr.push(Math.floor(i * 100 / (colorArr.length + 1)));
     }
 
-    this.setState({ colors: colorArr, colorValues: valueArr })
+    this.setState({ colors: colorArr, colorValues: valueArr });
   }
 
+  setTheme = (theme) => {
+    console.log(theme);
+    this.setState({ colors: theme.colors, colorValues: theme.values });
+  }
 
   setGradient = () => {
     let gradient = `linear-gradient(to right, `
@@ -160,6 +162,7 @@ class Visualizer extends React.Component {
             colorStopCount={this.state.colors.length}
             onAddColorStop={this.addColorStop}
             onRemoveColorStop={this.removeColorStop}
+            setTheme={this.setTheme}
           />
         </div>
         <div className="keyboard">

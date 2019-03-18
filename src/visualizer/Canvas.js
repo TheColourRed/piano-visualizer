@@ -5,7 +5,7 @@ const lineWidth = 3;
 const tuneF = 440; 
 const xScale = 0.0001;
 const yScale = 0.95;
-const exposureScale = 1.06;
+const exposureScale = 1.05;
 const decayActive = 0.98;
 const decayInActive = 0.60;
 
@@ -82,15 +82,11 @@ class Canvas extends React.Component {
   }
 
   buildGradient = gradient => {
-    gradient.addColorStop(0,'black');
-
     for(var i = 0; i < this.props.colors.length; i++) {
       gradient.addColorStop(
         this.props.colorValues[i]/100, 
         `rgba(${ this.props.colors[i].r }, ${ this.props.colors[i].g }, ${ this.props.colors[i].b}, 1)`);
     }
-
-    gradient.addColorStop(1,'black');
     return gradient;
   }
 
@@ -123,7 +119,6 @@ class Canvas extends React.Component {
 
     let normalizeScale = this.getNormalizationScale();
     let phase = - this.state.phaseOffset;
-    ctx.moveTo(0, yOffset);
     for (var x = -5; x < w+5; x+=3) {
       let y = yOffset;
       for(let [midi] of this.amplitudes) {

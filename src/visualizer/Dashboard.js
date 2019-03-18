@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from 'classnames';
+import Select from 'react-select';
 import { Range, getTrackBackground } from 'react-range';
-
+import themes from './res/Themes';
 
   const exposureMax = 100;
   const exposureMin = 0;
@@ -38,7 +39,8 @@ class Dashboard extends React.Component {
     onStickyKey:  PropTypes.func.isRequired,
     colorStopCount: PropTypes.number.isRequired,
     onAddColorStop: PropTypes.func.isRequired,
-    onRemoveColorStop: PropTypes.func.isRequired
+    onRemoveColorStop: PropTypes.func.isRequired,
+    setTheme: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -92,6 +94,32 @@ class Dashboard extends React.Component {
   }
 
   render() {
+    let selectStyle = {
+      control: styles => ({ ...styles, backgroundColor: 'dimgrey', color: 'black'}),
+      placeholder: styles => ({ ...styles, color: 'black' }),
+      singleValue: (styles, { data }) => ({ ...styles, color: 'black' }),
+      option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+        return {...styles,
+          backgroundColor: isDisabled ? null : isSelected ? 'black' : isFocused ? 'lightgrey' : 'grey',
+          color: isDisabled ? '#ccc' : isSelected ? 'white' : 'black',
+        };
+      },
+    }
+    let selectTheme = (theme) => ({
+      ...theme,
+      borderRadius: '4px',
+      spacing: {
+        ...theme.spacing,
+        controlHeight: '25px',
+        baseUnit: '1',
+        menuGutter: '4'
+      },
+      colors: {
+      ...theme.colors,
+        primary: 'black'
+      },
+    });
+
     return (
       <div className="h-100 container-fluid"> 
         <div className="h-100 row vertical-align">
@@ -175,7 +203,7 @@ class Dashboard extends React.Component {
           </div>
           {/* Far Right column */}
           <div className="col-2 h-100">
-            <div className="row h-50 py-2 vertical-align">
+            <div className="row h-50 pb-1 vertical-align">
               <label>{`Color stops: ${this.props.colorStopCount}`}</label>
               <div className="w-100 px-5">
                 <div className="dashboard_button--up" 
@@ -185,6 +213,19 @@ class Dashboard extends React.Component {
               </div>
             </div>
             <div className="row h-50 py-2 vertical-align">
+              <div className="w-100 px-3">
+                <div className="dashboard_select--gradient-wrap">
+                  <Select 
+                    menuPlacement="top" 
+                    options={themes}
+                    defaultValue={themes[0]}
+                    label="Themes"
+                    styles={selectStyle}
+                    theme={selectTheme}
+                    onChange={(option) => this.props.setTheme(option.value)}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

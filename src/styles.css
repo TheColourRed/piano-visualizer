@@ -5,7 +5,7 @@
 }
 
 :root {
-  --main-gradient: linear-gradient(to right, crimson, magenta);
+  --main-gradient: linear-gradient(to right, black, crimson, magenta, black);
 }
 
 body,
@@ -39,9 +39,7 @@ label {
 .banner--gradient {
   height: 2px;
   margin-top: 5px;
-  background-image: 
-    linear-gradient(to right, black, transparent, transparent, black),
-    var(--main-gradient);
+  background-image: var(--main-gradient);
 }
 
 .banner--text {
@@ -56,9 +54,7 @@ label {
 
 .gradientColorPicker--container {
   height: 100%;
-  background-image: 
-    linear-gradient(to right, black, transparent, transparent, black),
-    var(--main-gradient);
+  background-image: var(--main-gradient);
 }
 
 .gradientColorPicker--progress {
@@ -177,7 +173,7 @@ label {
   height: 1em;
   width: 95%;
   border-radius: 4px;
-  background-image: linear-gradient(to right, black, transparent, transparent, black), var(--main-gradient);
+  background-image: var(--main-gradient);
   background-attachment: fixed;
 }
 
@@ -241,7 +237,7 @@ label {
 }
 
 .dashboard--toggle-on {
-  background-image: linear-gradient(to right, black, transparent, transparent, black), var(--main-gradient);
+  background-image: var(--main-gradient);
   background-attachment: fixed;
 }
 
@@ -291,14 +287,14 @@ label {
 .dashboard_button--up:active {
   top: 0.2em;
   box-shadow: 0 0.3em 0.1em #111;
-  background-image: linear-gradient(to right, black, transparent, transparent, black), var(--main-gradient);
+  background-image: var(--main-gradient);
   background-attachment: fixed;
 }
 
 .dashboard_button--down:active {
   top: 0.2em;
   box-shadow: 0 0.3em 0.1em #111;
-  background-image: linear-gradient(to right, black, transparent, transparent, black), var(--main-gradient);
+  background-image: var(--main-gradient);
   background-attachment: fixed;
 }
 
@@ -308,6 +304,13 @@ label {
   border: black solid 2px;
   position: relative;
   box-shadow: 0 0.5em 0em #111;
+}
+
+.dashboard_select--gradient-wrap {
+  padding: 4px;
+  border-radius: 4px;
+  background-image: var(--main-gradient);
+  background-attachment: fixed;
 }
 
 .height-full {

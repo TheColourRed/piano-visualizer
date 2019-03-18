@@ -10,12 +10,10 @@ import "./styles.css";
 
 function App() {
   return (
-    <CustomProperties global properties={{'--main-gradient': 'linear-gradient(to right, crimson, magenta)'}}>
-      <div className="app height-full">
-        <Banner />
-        <Visualizer />
-      </div>
-    </CustomProperties>
+    <div className="app height-full">
+      <Banner />
+      <Visualizer />
+    </div>
   );
 }
 
