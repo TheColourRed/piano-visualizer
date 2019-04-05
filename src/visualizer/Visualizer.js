@@ -4,7 +4,9 @@ import Keyboard from "./Keyboard";
 import Dashboard from "./Dashboard";
 import GradientColorPicker from "./GradientColorPicker"
 import themes from './res/Themes';
+import classNames from 'classnames';
 import CustomProperties from "react-custom-properties";
+import { isMobile } from "react-device-detect";
 import ContainerDimensions from 'react-container-dimensions'
 
 class Visualizer extends React.Component {
@@ -118,9 +120,9 @@ class Visualizer extends React.Component {
 
   render() {
     return (
-      <div className="visualizer">
+      <div className={classNames('visualizer', {'h-100' : isMobile})}>
         <CustomProperties global properties={{'--main-gradient': this.setGradient()}}/>
-        <div className="canvas">
+        <div className={classNames('canvas', {'h-75' : isMobile})}>
           <ContainerDimensions>
             {({ width, height }) => 
               <Canvas 
@@ -139,33 +141,37 @@ class Visualizer extends React.Component {
             }
           </ContainerDimensions>
         </div>
-        <div className="gradientColorPicker">
-          <GradientColorPicker
-            colors={this.state.colors}
-            colorValues={this.state.colorValues}
-            onColorChange={this.onColorChange}
-            onColorValueChange={this.onColorValueChange}
-          />
-        </div>
-        <div className="dashboard">
-          <Dashboard 
-            exposure={this.state.exposure}
-            setExposure={this.setExposure}
-            phaseChange={this.state.phaseChange}
-            setPhaseChange={this.setPhaseChange}
-            scale={this.state.scale} 
-            setScale={this.setScale}
-            translate={this.state.translate}
-            setTranslate={this.setTranslate}
-            stickyKey={this.state.stickyKey}
-            onStickyKey={this.toggleStickyKey}
-            colorStopCount={this.state.colors.length}
-            onAddColorStop={this.addColorStop}
-            onRemoveColorStop={this.removeColorStop}
-            setTheme={this.setTheme}
-          />
-        </div>
-        <div className="keyboard">
+        {!isMobile &&
+          <div className="gradientColorPicker">
+            <GradientColorPicker
+              colors={this.state.colors}
+              colorValues={this.state.colorValues}
+              onColorChange={this.onColorChange}
+              onColorValueChange={this.onColorValueChange}
+            />
+          </div>
+        }
+        {!isMobile &&
+          <div className="dashboard">
+            <Dashboard 
+              exposure={this.state.exposure}
+              setExposure={this.setExposure}
+              phaseChange={this.state.phaseChange}
+              setPhaseChange={this.setPhaseChange}
+              scale={this.state.scale} 
+              setScale={this.setScale}
+              translate={this.state.translate}
+              setTranslate={this.setTranslate}
+              stickyKey={this.state.stickyKey}
+              onStickyKey={this.toggleStickyKey}
+              colorStopCount={this.state.colors.length}
+              onAddColorStop={this.addColorStop}
+              onRemoveColorStop={this.removeColorStop}
+              setTheme={this.setTheme}
+            />
+          </div>
+        }
+        <div className={classNames('keyboard', {'h-25' : isMobile})}>
           <Keyboard 
             onPlayNoteInput={this.pressNote}
             onStopNote={this.onStopNote}

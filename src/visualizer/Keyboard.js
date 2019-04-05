@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Piano, KeyboardShortcuts, MidiNumbers } from "react-piano";
 import SoundfontProvider from "./sounds/SoundfontProvider";
 import classNames from 'classnames';
+import { isMobile } from "react-device-detect";
 import "react-piano/dist/styles.css";
 
 // webkitAudioContext fallback needed to support Safari
@@ -13,6 +14,11 @@ const soundfontHostname = "https://d1pzp51pvbm36p.cloudfront.net";
 const noteRange = {
   first: MidiNumbers.fromNote("a0"),
   last: MidiNumbers.fromNote("c8")
+};
+
+const mobileNoteRange = {
+  first: MidiNumbers.fromNote("c3"),
+  last: MidiNumbers.fromNote("c5")
 };
 
 const keyboardShortcuts = KeyboardShortcuts.create({
@@ -33,9 +39,7 @@ class Keyboard extends React.Component {
     onSustain: PropTypes.func
   }
 
-  down = false;
-
-  componentDidMount(){
+  componentDidMount(){   
     document.addEventListener("keydown", this.handleKeyDown);
     document.addEventListener("keyup", this.handleKeyUp);
   }
@@ -46,20 +50,15 @@ class Keyboard extends React.Component {
   }                            
 
   handleKeyDown = event => {
-    if(this.down) {
+    if(this.props.sustain) {
       return;
-    } else {
-      this.down = true;
-    }
-
-    if (event.key === ' ') {
+    } else if (event.key === ' ') {
       this.props.onSustain();
     }
   };
 
   handleKeyUp = event => {
-    this.down = false;
-    if (event.key === ' ') {
+    if (this.props.sustain && event.key === ' ') {
       this.props.onSustain();
     }
   };
@@ -67,7 +66,7 @@ class Keyboard extends React.Component {
   render() {
     return (
       <div className="h-100">
-        <div className="keyboard_keys">
+        <div className={classNames('keyboard_keys', {'h-100 pb-3' : isMobile})}>
           <div className="keyboard--felt"/>
           <SoundfontProvider
             instrumentName="acoustic_grand_piano"
@@ -79,24 +78,26 @@ class Keyboard extends React.Component {
             stickyKey={this.props.stickyKey}
             render={({ isLoading, playNote, stopNote }) => (
               <Piano
-                noteRange={noteRange}
+                noteRange={isMobile ? mobileNoteRange : noteRange}
                 playNote={playNote}
                 stopNote={stopNote}
                 onPlayNoteInput={this.props.onPlayNoteInput}
                 disabled={isLoading}
                 activeNotes={this.props.pressedNotes}
-                keyboardShortcuts={keyboardShortcuts}
+                keyboardShortcuts={isMobile ? null: keyboardShortcuts}
               />
             )}
           />
         </div>
-        <div className="keyboard_footer vertical-align">
-          <div className={classNames('keyboard_footer--sustain', {
-              'keyboard_footer--active' : this.props.sustain
-            })}
-            onMouseDown={this.props.onSustain}
-          />
-        </div>
+        {!isMobile &&
+          <div className="keyboard_footer vertical-align">
+            <div className={classNames('keyboard_footer--sustain', {
+                'keyboard_footer--active' : this.props.sustain
+              })}
+              onMouseDown={this.props.onSustain}
+            />
+          </div>
+        }
       </div>
     );
   }

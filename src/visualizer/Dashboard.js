@@ -198,7 +198,9 @@ class Dashboard extends React.Component {
               </div>
             </div>
             <div className="h-50 row vertical-align">
-                
+              <div class="mx-3">
+                <label>Version 1.0 of the react project. Version 2.0 will be even better! (if I ever get to it...)</label>
+              </div>
             </div>
           </div>
           {/* Far Right column */}
